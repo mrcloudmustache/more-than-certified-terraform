@@ -6,18 +6,18 @@ resource "null_resource" "dockervol1" {
 
 module "images" {
     source = "./image"
-    image_in = var.image[terraform.workspace]
+    image_in = var.image[var.env]
   
 }
 
 resource "docker_container" "nodered_container" {
   depends_on = [ null_resource.dockervol1 ]
   count = local.container_count
-  name  = join("-", ["nodered" ,terraform.workspace,random_string.random[count.index].result])
+  name  = join("-", ["nodered" ,var.env,random_string.random[count.index].result])
   image = module.images.image_out
   ports {
     internal = var.int_port
-    external = var.ext_port[terraform.workspace][count.index]
+    external = var.ext_port[var.env][count.index]
   }
 
   volumes {

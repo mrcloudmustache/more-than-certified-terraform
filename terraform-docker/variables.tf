@@ -32,6 +32,13 @@ variable "int_port" {
   }
 }
 
+variable "env" {
+  type = string
+  description = "The name of the environment"
+  default = "prod"
+  
+}
+
 locals {
-  container_count = length(var.ext_port[terraform.workspace])
+  container_count = length(var.ext_port[var.env])
 }
